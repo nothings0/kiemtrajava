@@ -3,9 +3,8 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Study_document/KiemTra/src/java/nhan/data/dao/Database.java</file>
-            <file>file:/C:/Study_document/KiemTra/src/java/nhan/data/driver/MysqlDriver.java</file>
-            <file>file:/C:/Study_document/KiemTra/src/java/nhan/utils/Constants.java</file>
+            <file>file:/C:/Study_document/nhanpv/src/java/nhan/data/web/InsertSinhVienController.java</file>
+            <file>file:/C:/Study_document/nhanpv/web/views/sinhvien.jsp</file>
         </group>
     </open-files>
 </project-private>

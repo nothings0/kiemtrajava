@@ -11,7 +11,6 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import nhan.data.dao.Database;
-import nhan.data.model.SinhVien;
 
 /**
  *
@@ -57,6 +56,7 @@ public class InsertSinhVienController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        request.getSession().removeAttribute("exist_sv");
         request.getRequestDispatcher("./views/sinhvien.jsp").include(request, response);
     }
 
@@ -73,8 +73,8 @@ public class InsertSinhVienController extends HttpServlet {
             throws ServletException, IOException {
         String err_ten="", err_dtb="", err_tuoi="";
         String ten = request.getParameter("ten");
-        int tuoi = Integer.parseInt(request.getParameter("tuoi"));
-        float dtb = Float.parseFloat(request.getParameter("dtb"));
+        Integer tuoi = null;
+        Float dtb = null;
         boolean err = false;
         if(ten == null || ten.isEmpty()){
             err_ten="Vui lòng nhập tên";
@@ -85,22 +85,35 @@ public class InsertSinhVienController extends HttpServlet {
             request.getSession().removeAttribute("err_ten");
         }
         
-        if(dtb < 0.0 || dtb > 10.0){
-            err_dtb="Diem trung binh tu 0 - 10";
-            request.getSession().setAttribute("err_dtb", err_dtb);
-            err=true;
-        }else{
-            err_dtb="";
-            request.getSession().removeAttribute("err_dtb");
-        }
-        
-        if(tuoi < 0 || tuoi > 100){
-            err_tuoi="Tuoi tu 0 - 100";
+        try {
+            tuoi = Integer.parseInt(request.getParameter("tuoi"));
+            if (tuoi < 0 || tuoi > 120) { // Giả sử tuổi hợp lệ trong khoảng từ 0 đến 120
+                err_tuoi = "Vui lòng nhập tuổi hợp lệ (0 - 120)";
+                request.getSession().setAttribute("err_tuoi", err_tuoi);
+                err = true;
+            } else {
+                request.getSession().removeAttribute("err_tuoi");
+            }
+        } catch (NumberFormatException e) {
+            err_tuoi = "Vui lòng nhập tuổi hợp lệ";
             request.getSession().setAttribute("err_tuoi", err_tuoi);
-            err=true;
-        }else{
-            err_tuoi="";
-            request.getSession().removeAttribute("err_tuoi");
+            err = true;
+        }
+
+        // Kiểm tra điểm trung bình hợp lệ
+        try {
+            dtb = Float.parseFloat(request.getParameter("dtb"));
+            if (dtb < 0.0 || dtb > 10.0) { // Điểm trung bình hợp lệ trong khoảng từ 0.0 đến 10.0
+                err_dtb = "Điểm trung bình phải nằm trong khoảng từ 0 - 10";
+                request.getSession().setAttribute("err_dtb", err_dtb);
+                err = true;
+            } else {
+                request.getSession().removeAttribute("err_dtb");
+            }
+        } catch (NumberFormatException e) {
+            err_dtb = "Vui lòng nhập điểm trung bình hợp lệ";
+            request.getSession().setAttribute("err_dtb", err_dtb);
+            err = true;
         }
         
         if(err){
